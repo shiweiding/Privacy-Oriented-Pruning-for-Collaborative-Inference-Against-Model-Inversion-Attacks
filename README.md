@@ -17,3 +17,7 @@ We introduce Lipschitz regularization in pruning to reduce the stability of mode
 Given a function $f$, the Lipschitz constant $k$ of $f$ is defined as the smallest constant in the Lipschitz condition:
 $k = \sup_{x_1\neq x_2} \frac{\|f(x_1) - f(x_2)\|}{\|x_1-x_2\|}.$
 Given a certain distance between outputs, the lower bound of the distance between inputs can be derived using Lipschitz constant $k$: $\|x_1-x_2\| \geq \frac{1}{k}\|f(x_1) - f(x_2)\|.$
+For $i\geq 2$, we define block-wise local Lipschitz constraint $k_i$ of the $i$-th block as:
+$k_{i} = \sup_{x}\frac{\|f_i f_{i-1} ... f_1(x+ \delta) - f_i f_{i-1} ... f_1(x)\|}{\|f_{i-1} ... f_1(x+ \delta) - f_{i-1}... f_1(x)\|}$, where $\delta$ denotes a random noise sampled from a Gaussian distribution. For $i=1$, we define block-wise local Lipschitz constraint $k_1$ of the first block as:
+$k_{1} = \sup_{x} \frac{\|f_1(x+ {\delta}) - f_1(x)\|}{{\|\delta\|}}.$ 
+We calculate the Lipschitz loss using the block-wise local Lipschitz constraint as: $L_{lip}(\theta_e) = \sum_{i=1}^{N} \alpha_i k_i,$ where $\alpha_i$ is the hyper-parameter to balance the constraints.
