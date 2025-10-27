@@ -21,3 +21,11 @@ For $i\geq 2$, we define block-wise local Lipschitz constraint $k_i$ of the $i$-
 $k_{i} = \sup_{x}\frac{\|f_i f_{i-1} ... f_1(x+ \delta) - f_i f_{i-1} ... f_1(x)\|}{\|f_{i-1} ... f_1(x+ \delta) - f_{i-1}... f_1(x)\|}$, where $\delta$ denotes a random noise sampled from a Gaussian distribution. For $i=1$, we define block-wise local Lipschitz constraint $k_1$ of the first block as:
 $k_{1} = \sup_{x} \frac{\|f_1(x+ {\delta}) - f_1(x)\|}{{\|\delta\|}}.$ 
 We calculate the Lipschitz loss using the block-wise local Lipschitz constraint as: $L_{lip}(\theta_e) = \sum_{i=1}^{N} \alpha_i k_i,$ where $\alpha_i$ is the hyper-parameter to balance the constraints.
+### Adversarial Training
+We leverage adversarial reconstruction training to mislead the model inversion attacker and protect input data privacy. The parameters $\theta_{adv}$ are trained to minimize the adversarial loss $L_{adv}$, which measures the difference between the reconstructed data $f_{adv}(f_e(x, \theta_e)$ and the raw input sample $x$. The adversarial loss $L_{adv}$ can be calculated as: $L_{adv}(\theta_e, \theta_{adv}) = \|x - f_{adv}(f_e(x, \theta_e), \theta_{adv})\|.$ 
+By integrating the surrogate inversion model, the target model $f$ is trained to mislead the model inversion attackers while maintaining the prediction performance. To achieve this, we maximize the adversarial loss while minimizing the prediction loss by solving the optimization problem:
+$\min_{\theta} \mathcal{L}(\theta, m) - \beta\mathcal{L}_{adv}(\theta_e, \theta_{adv}).$
+We aim to identify the strongest attack given a target model and incorporate the strongest attack into the minimization problem, which can be formulated as a bi-level optimization problem:
+$\min_{\theta} \max_{\theta_{adv}} L(\theta, m) - \beta L_{adv}(\theta_e, \theta_{adv}).$
+
+[Paper Link](https://arxiv.org/abs/2307.10981)
